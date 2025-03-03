@@ -25,3 +25,19 @@ func NewCache(interval time.Duration) (Cache, error) {
 
 	return c, nil
 }
+
+func (c *Cache) Add(key string, value []byte) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.cache[key] = cacheEntry{
+		createdAt: time.Now().Local(),
+		val:       value,
+	}
+}
+
+func (c *Cache) Get(key string) ([]byte, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	val, ok := c.cache[key]
+	return val.val, ok
+}
