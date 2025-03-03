@@ -3,7 +3,7 @@ package pokeapi
 type LocationAreas struct {
 	Count    int               `json:"count"`
 	Next     string            `json:"next"`
-	Previous any               `json:"previous"`
+	Previous string            `json:"previous"`
 	Results  []LocationResults `json:"results"`
 }
 

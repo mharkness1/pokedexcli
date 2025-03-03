@@ -14,6 +14,10 @@ type config struct {
 
 func main() {
 	r := bufio.NewScanner(os.Stdin)
+	fmt.Println("Welcome to the Pokedex")
+	fmt.Println("Type 'help' for list of commands.")
+	cfg := &config{}
+
 	for {
 		fmt.Print("Pokedex > ")
 		r.Scan()
@@ -22,7 +26,7 @@ func main() {
 		if i, ok := commandLookup[input[0]]; !ok {
 			fmt.Println("Unknown Command")
 		} else {
-			err := i.callback(&config{})
+			err := i.callback(cfg)
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 			}

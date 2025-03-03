@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/mharkness1/pokedexcli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -31,10 +33,36 @@ func commandHelp(config *config) error {
 }
 
 func commandMap(config *config) error {
+	client := pokeapi.NewClient()
+
+	locations, err := client.GetLocationAreas(config.NextURL)
+	if err != nil {
+		return err
+	}
+
+	config.NextURL = locations.Next
+	config.PreviousURL = locations.Previous
+
+	for i := range locations.Results {
+		fmt.Println(locations.Results[i].Name)
+	}
 	return nil
 }
 
 func commandMapb(config *config) error {
+	client := pokeapi.NewClient()
+
+	locations, err := client.GetLocationAreas(config.PreviousURL)
+	if err != nil {
+		return err
+	}
+
+	config.NextURL = locations.Next
+	config.PreviousURL = locations.Previous
+
+	for i := range locations.Results {
+		fmt.Println(locations.Results[i].Name)
+	}
 	return nil
 }
 
