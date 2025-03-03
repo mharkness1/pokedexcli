@@ -1,3 +1,5 @@
+# Ignore logging files.
+*.log
 #Default git ignore for first local project.
 # Binaries for programs and plugins
 *.exe
