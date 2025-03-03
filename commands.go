@@ -7,20 +7,24 @@ import (
 	"github.com/mharkness1/pokedexcli/internal/pokeapi"
 )
 
+// Properties of a command.
 type cliCommand struct {
 	name        string
 	description string
 	callback    func(config *config) error
 }
 
+// Create empty map taking command and mapping to the cliCommand struct (with callback)
 var commandLookup map[string]cliCommand
 
+// Exit
 func commandExit(config *config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
+// Lists the map of available commands and their descriptions.
 func commandHelp(config *config) error {
 	fmt.Println("\nWelcome to the Pokedex!")
 	fmt.Println("Usage:")
@@ -32,6 +36,7 @@ func commandHelp(config *config) error {
 	return nil
 }
 
+// Calls for location areas from pokeapi and lists results (20 at a time), if active when called will move to next page.
 func commandMap(config *config) error {
 	client := pokeapi.NewClient()
 
@@ -49,6 +54,7 @@ func commandMap(config *config) error {
 	return nil
 }
 
+// Will return to previous page of location areas when called. If called initally will return first 20.
 func commandMapb(config *config) error {
 	client := pokeapi.NewClient()
 
@@ -66,6 +72,7 @@ func commandMapb(config *config) error {
 	return nil
 }
 
+// Init runs first as reserved function name, instatiates the map of commands and command words.
 func init() {
 	commandLookup = map[string]cliCommand{
 		"exit": {

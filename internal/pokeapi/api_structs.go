@@ -1,5 +1,6 @@
 package pokeapi
 
+// Structs for the Location Areas - used by map and mapb commands.
 type LocationAreas struct {
 	Count    int               `json:"count"`
 	Next     string            `json:"next"`
