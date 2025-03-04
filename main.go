@@ -26,11 +26,17 @@ func main() {
 		r.Scan()
 		input := cleanInput(r.Text())
 
+		//TODO more sophisticated passing arguments in, at the moment just checks first and second inputs.
+		commandName := input[0]
+		args := []string{}
+		if len(input) > 1 {
+			args = input[1:]
+		}
 		// On input checks if it is in the dictionary. If it is in then calls the command and logs the error (config is always passed in).
-		if i, ok := commandLookup[input[0]]; !ok {
+		if i, ok := commandLookup[commandName]; !ok {
 			fmt.Println("Unknown Command")
 		} else {
-			err := i.callback(cfg)
+			err := i.callback(cfg, args...)
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 			}

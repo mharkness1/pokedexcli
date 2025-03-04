@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -11,21 +12,21 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(config *config) error
+	callback    func(config *config, args ...string) error
 }
 
 // Create empty map taking command and mapping to the cliCommand struct (with callback)
 var commandLookup map[string]cliCommand
 
 // Exit
-func commandExit(config *config) error {
+func commandExit(config *config, args ...string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
 // Lists the map of available commands and their descriptions.
-func commandHelp(config *config) error {
+func commandHelp(config *config, args ...string) error {
 	fmt.Println("\nWelcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println("")
@@ -37,7 +38,7 @@ func commandHelp(config *config) error {
 }
 
 // Calls for location areas from pokeapi and lists results (20 at a time), if active when called will move to next page.
-func commandMap(config *config) error {
+func commandMap(config *config, args ...string) error {
 	client := pokeapi.NewClient()
 
 	locations, err := client.GetLocationAreas(config.NextURL)
@@ -55,7 +56,7 @@ func commandMap(config *config) error {
 }
 
 // Will return to previous page of location areas when called. If called initally will return first 20.
-func commandMapb(config *config) error {
+func commandMapb(config *config, args ...string) error {
 	client := pokeapi.NewClient()
 
 	locations, err := client.GetLocationAreas(config.PreviousURL)
@@ -69,6 +70,31 @@ func commandMapb(config *config) error {
 	for i := range locations.Results {
 		fmt.Println(locations.Results[i].Name)
 	}
+	return nil
+}
+
+// Takes location area, and returns the pokemon that are available there.
+func commandExplore(config *config, args ...string) error {
+	if len(args) != 1 {
+		return errors.New("must provide a location to explore")
+	}
+
+	client := pokeapi.NewClient()
+
+	exploreResults, err := client.GetExploreResults(args[0])
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Exploring %s ...\n", args[0])
+	fmt.Println("Found Pokemon:")
+	for i := range exploreResults.PokemonEncounters {
+		fmt.Printf(" - %s\n", exploreResults.PokemonEncounters[i].Pokemon.Name)
+	}
+	return nil
+}
+
+func commandCatch(config *config, args ...string) error {
 	return nil
 }
 
@@ -94,6 +120,11 @@ func init() {
 			name:        "mapb",
 			description: "Lists previous page of locations",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Lists pokemon available at a given location",
+			callback:    commandExplore,
 		},
 	}
 }
