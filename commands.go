@@ -126,5 +126,10 @@ func init() {
 			description: "Lists pokemon available at a given location",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Attempt to catch a given pokemon",
+			callback:    commandCatch,
+		},
 	}
 }

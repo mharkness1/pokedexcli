@@ -114,3 +114,7 @@ func (c *Client) GetExploreResults(AreaName string) (*ExploreResults, error) {
 
 	return exploreResults, nil
 }
+
+func GetPokemonCharacteristics(PokemonName string) (*PokemonResults, error) {
+	return nil, nil
+}
