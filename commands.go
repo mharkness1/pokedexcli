@@ -95,6 +95,7 @@ func commandExplore(config *config, args ...string) error {
 }
 
 func commandCatch(config *config, args ...string) error {
+	fmt.Printf("Throwing a pokeball at %s...\n", args[0])
 	return nil
 }
 
