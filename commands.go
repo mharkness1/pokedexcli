@@ -107,15 +107,19 @@ func commandCatch(config *config, args ...string) error {
 
 	check := rand.Intn(pokemon.BaseExperience)
 
-	fmt.Printf("Throwing a pokeball at %s...\n", args[0])
+	fmt.Printf("Throwing a Pokeball at %s...\n", args[0])
 	if check > 30 {
 		fmt.Printf("%s escaped\n", args[0])
 		return nil
 	}
 
 	fmt.Printf("%s was caught\n", args[0])
-	config.CaughtPokemon[args[0]] = *pokemon
+	config.CaughtPokemon[pokemon.Name] = *pokemon
 
+	return nil
+}
+
+func commandInspect(config *config, args ...string) error {
 	return nil
 }
 
@@ -151,6 +155,11 @@ func init() {
 			name:        "catch",
 			description: "Attempt to catch a given pokemon",
 			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "Lists a caught pokemon's characteristics",
+			callback:    commandInspect,
 		},
 	}
 }

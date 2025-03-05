@@ -21,7 +21,9 @@ func main() {
 	r := bufio.NewScanner(os.Stdin)
 	fmt.Println("Welcome to the Pokedex")
 	fmt.Println("Type 'help' for list of commands.")
-	cfg := &config{}
+	cfg := &config{
+		CaughtPokemon: make(map[string]pokeapi.PokemonResults),
+	}
 
 	// Continuous for loop, prints 'Pokedex >' and listens for input from the reader.
 	for {
