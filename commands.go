@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
 
 	"github.com/mharkness1/pokedexcli/internal/pokeapi"
@@ -95,7 +96,26 @@ func commandExplore(config *config, args ...string) error {
 }
 
 func commandCatch(config *config, args ...string) error {
+	if len(args) != 1 {
+		return errors.New("a pokemon name must be provided")
+	}
+	client := pokeapi.NewClient()
+	pokemon, err := client.GetPokemonCharacteristics(args[0])
+	if err != nil {
+		return err
+	}
+
+	check := rand.Intn(pokemon.BaseExperience)
+
 	fmt.Printf("Throwing a pokeball at %s...\n", args[0])
+	if check > 30 {
+		fmt.Printf("%s escaped\n", args[0])
+		return nil
+	}
+
+	fmt.Printf("%s was caught\n", args[0])
+	config.CaughtPokemon[args[0]] = *pokemon
+
 	return nil
 }
 

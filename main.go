@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/mharkness1/pokedexcli/internal/pokeapi"
 )
 
 // Defines global config which trackes page URLs relative.
 type config struct {
-	NextURL     string
-	PreviousURL string
+	NextURL       string
+	PreviousURL   string
+	CaughtPokemon map[string]pokeapi.PokemonResults
 }
 
 // Creates new reader, prints welcome message once, and instantiates config.

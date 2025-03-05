@@ -115,6 +115,39 @@ func (c *Client) GetExploreResults(AreaName string) (*ExploreResults, error) {
 	return exploreResults, nil
 }
 
-func GetPokemonCharacteristics(PokemonName string) (*PokemonResults, error) {
-	return nil, nil
+func (c *Client) GetPokemonCharacteristics(PokemonName string) (*PokemonResults, error) {
+	pageURL := c.baseURL + "/pokemon/" + PokemonName
+
+	if val, ok := c.cache.Get(pageURL); ok {
+		var pokemonRes *PokemonResults
+		err := json.Unmarshal(val, &pokemonRes)
+		if err != nil {
+			return nil, err
+		}
+		return pokemonRes, nil
+	}
+
+	res, err := http.Get(pageURL)
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode > 299 {
+		return nil, fmt.Errorf("http error status code: %v", res.StatusCode)
+	}
+
+	defer res.Body.Close()
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var pokemonRes *PokemonResults
+	if err := json.Unmarshal(body, &pokemonRes); err != nil {
+		return nil, fmt.Errorf("error in json.unmarshal: %v", err)
+	}
+
+	c.cache.Add(pageURL, body)
+
+	return pokemonRes, nil
 }
