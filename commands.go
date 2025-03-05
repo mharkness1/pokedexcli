@@ -124,7 +124,7 @@ func commandInspect(config *config, args ...string) error {
 	name := args[0]
 	pokemon, ok := config.CaughtPokemon[name]
 	if !ok {
-		return errors.New("Pokemon not caught")
+		return errors.New("pokemon not caught")
 	}
 
 	fmt.Printf("Name: %s\n", pokemon.Name)
