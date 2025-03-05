@@ -95,6 +95,7 @@ func commandExplore(config *config, args ...string) error {
 	return nil
 }
 
+// Takes pokemon name, uses base experience to calculate likelihood of catching and adds it to persistent pokedex.
 func commandCatch(config *config, args ...string) error {
 	if len(args) != 1 {
 		return errors.New("a pokemon name must be provided")
@@ -120,6 +121,23 @@ func commandCatch(config *config, args ...string) error {
 }
 
 func commandInspect(config *config, args ...string) error {
+	name := args[0]
+	pokemon, ok := config.CaughtPokemon[name]
+	if !ok {
+		return errors.New("Pokemon not caught")
+	}
+
+	fmt.Printf("Name: %s\n", pokemon.Name)
+	fmt.Printf("Height: %d\n", pokemon.Height)
+	fmt.Printf("Weight: %d\n", pokemon.Weight)
+	fmt.Printf("Stats:\n")
+	for _, stat := range pokemon.Stats {
+		fmt.Printf(" -%s: %d\n", stat.Stat.Name, stat.BaseStat)
+	}
+	fmt.Printf("Types:\n")
+	for _, tp := range pokemon.Types {
+		fmt.Printf(" -%s\n", tp.Type.Name)
+	}
 	return nil
 }
 
