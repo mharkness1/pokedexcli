@@ -98,7 +98,7 @@ func commandExplore(config *config, args ...string) error {
 // Takes pokemon name, uses base experience to calculate likelihood of catching and adds it to persistent pokedex.
 func commandCatch(config *config, args ...string) error {
 	if len(args) != 1 {
-		return errors.New("a pokemon name must be provided")
+		return errors.New("pokemon name must be provided")
 	}
 	client := pokeapi.NewClient()
 	pokemon, err := client.GetPokemonCharacteristics(args[0])
@@ -115,6 +115,7 @@ func commandCatch(config *config, args ...string) error {
 	}
 
 	fmt.Printf("%s was caught\n", args[0])
+	fmt.Printf("You can now inspect %s with the 'inspect' command", args[0])
 	config.CaughtPokemon[pokemon.Name] = *pokemon
 
 	return nil
@@ -137,6 +138,14 @@ func commandInspect(config *config, args ...string) error {
 	fmt.Printf("Types:\n")
 	for _, tp := range pokemon.Types {
 		fmt.Printf(" -%s\n", tp.Type.Name)
+	}
+	return nil
+}
+
+func commandPokedex(config *config, args ...string) error {
+	fmt.Println("Your pokedex:")
+	for _, pokemon := range config.CaughtPokemon {
+		fmt.Printf(" - %s\n", pokemon.Name)
 	}
 	return nil
 }
@@ -178,6 +187,11 @@ func init() {
 			name:        "inspect",
 			description: "Lists a caught pokemon's characteristics",
 			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Lists all caught pokemon",
+			callback:    commandPokedex,
 		},
 	}
 }
